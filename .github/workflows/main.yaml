@@ -48,7 +48,9 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+          pwd
+          ls -ltr
 
       - name: Upload files to S3
-        run: aws s3 sync ./public s3://staticsitebk1918 --delete
+        run: aws s3 sync ./build s3://staticsitebk1918 --delete
 
