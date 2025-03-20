@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: run
+        run: |
+          export AWS_ACCESS_KEY_ID='AKIAYS2NTYMWX6FWU6VA'
+          export AWS_SECRET_ACCESS_KEY='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'
+          export AWS_DEFAULT_REGION='us-west-2'
 #      - name: Set up Node.js
 #        uses: actions/setup-node@v2
 #        with:
