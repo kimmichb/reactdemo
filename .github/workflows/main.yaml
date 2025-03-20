@@ -6,50 +6,28 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  AWS_REGION : 'us-west-2' #Change to reflect your Region
+
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+
 jobs:
-  build:
+  AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: run
-        run: |
-          export AWS_ACCESS_KEY_ID='AKIAYS2NTYMWX6FWU6VA'
-          export AWS_SECRET_ACCESS_KEY='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'
-          export AWS_DEFAULT_REGION='us-west-2'
-#      - name: Set up Node.js
-#        uses: actions/setup-node@v2
-#        with:
-#          node-version: '14'
-
-#      - name: Install dependencies
-#        run: |
-#          npm install
-#          npm install react-router-dom@5
-#          npm install react-scripts@latest
-#          npm audit fix --force
-
-#      - name: Build app
-#        run: npm run build
-
-      - name: Upload to S3 
-        uses: jakejarvis/s3-sync-action@master
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          args: --acl public-read  --follow-symlinks --delete --exclude '.git/*'
-        env:
-          SOURCE_DIR: 'public'
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-west-2'
-
-      - name: check 
+          role-to-assume: arn:aws:iam::590183908141:role/GitHubAction-AssumeRoleWithAction #change to reflect your IAM role’s ARN
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+      # Hello from AWS: WhoAmI
+      - name: Sts GetCallerIdentity
         run: |
-          cat ~/.aws/credentials
-          nev
-         
-       
-      
+          aws sts get-caller-identity
 
