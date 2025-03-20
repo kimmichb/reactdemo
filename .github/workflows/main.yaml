@@ -31,3 +31,6 @@ jobs:
         run: |
           aws sts get-caller-identity
 
+      - name: Upload files to S3
+        run: aws s3 sync ./public s3://staticsitebk1918 --delete
+
