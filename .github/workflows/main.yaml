@@ -17,9 +17,26 @@ permissions:
 jobs:
   AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
+    
     steps:
+
       - name: Git clone the repository
         uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install react-router-dom@5
+          npm install react-scripts@latest
+          npm audit fix --force
+      - name: Build app
+        run: npm run build
+        
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
@@ -27,6 +44,7 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
       # Hello from AWS: WhoAmI
+      
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
