@@ -23,6 +23,8 @@ jobs:
         run: |
           npm install
           npm install react-router-dom@5
+          npm install react-scripts@latest
+          npm audit fix --force
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Build app
