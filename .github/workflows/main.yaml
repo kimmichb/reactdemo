@@ -52,5 +52,6 @@ jobs:
           ls -ltr
 
       - name: Upload files to S3
-        run: aws s3 sync ./build/ s3://staticsitebk1918 --delete
+        #run: aws s3 sync ./build/ s3://staticsitebk1918 --delete
+        run: aws s3 sync ./build/ s3://reactnew-lb-32348104.us-west-2.elb.amazonaws.com --delete
 
